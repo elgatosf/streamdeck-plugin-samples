@@ -134,3 +134,6 @@ dist
 
 # OS
 .DS_Store
+
+# Plugin
+bin
