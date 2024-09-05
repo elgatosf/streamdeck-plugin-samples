@@ -10,7 +10,9 @@
 			"UUID": "com.elgato.layouts.layout",
 			"Icon": "imgs/actions/layout/layout",
 			"Tooltip": "Demonstrates switching to different layouts.",
-			"Controllers": ["Encoder"],
+			"Controllers": [
+				"Encoder"
+			],
 			"States": [
 				{
 					"Image": "imgs/actions/layout/layout",
@@ -27,7 +29,9 @@
 			"UUID": "com.elgato.layouts.feedback",
 			"Icon": "imgs/actions/feedback/rotate",
 			"Tooltip": "Demonstrates updating layout items.",
-			"Controllers": ["Encoder"],
+			"Controllers": [
+				"Encoder"
+			],
 			"States": [
 				{
 					"Image": "imgs/actions/feedback/rotate"
