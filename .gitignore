@@ -128,3 +128,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# VSCode Extensions
+.history
+
+# OS
+.DS_Store
+
+# Plugin
+bin
