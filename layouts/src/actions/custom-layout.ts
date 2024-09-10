@@ -6,7 +6,7 @@ import { action, DialRotateEvent, SingletonAction } from '@elgato/streamdeck';
 @action({ UUID: 'com.elgato.layouts.custom-layout' })
 export class CustomLayout extends SingletonAction {
 	/**
-	 * Switch the layout and update the title based on the dial rotation.
+	 * Switch the layout and update values based on the dial rotation.
 	 */
 	async onDialRotate(ev: DialRotateEvent<DialSettings>): Promise<void> {
 		let { value = 0 } = ev.payload.settings;

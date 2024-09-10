@@ -85,7 +85,7 @@
 	],
 	"Nodejs": {
 		"Version": "20",
-		"Debug": "--inspect=127.0.0.1:12349"
+		"Debug": "enabled"
 	},
 	"UUID": "com.elgato.layouts"
 }
