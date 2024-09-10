@@ -1,7 +1,7 @@
 {
 	"scripts": {
 		"build": "rollup -c",
-		"watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.elgato.catastrophe\""
+		"watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.elgato.cat-keys\""
 	},
 	"type": "module",
 	"devDependencies": {

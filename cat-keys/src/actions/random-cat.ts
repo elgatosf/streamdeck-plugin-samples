@@ -13,7 +13,7 @@ const FIFTEEN_MINUTES = 15 * 60 * 1000;
 /**
  * An example action class that displays a random cat.
  */
-@action({ UUID: 'com.elgato.catastrophe.random-cat' })
+@action({ UUID: 'com.elgato.cat-keys.random-cat' })
 export class RandomCat extends SingletonAction<RandomCatSettings> {
 	private visibleAutoActions = new Map<String, Action>();
 	private timer: NodeJS.Timeout | null = null;

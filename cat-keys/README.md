@@ -1,4 +1,4 @@
-# Catastrophe
+# Cat Keys
 
 A cute and cuddly plugin to demonstrate features of the Stream Deck SDK.
 
