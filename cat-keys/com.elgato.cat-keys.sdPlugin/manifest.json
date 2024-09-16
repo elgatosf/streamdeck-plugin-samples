@@ -10,9 +10,7 @@
 			"Icon": "imgs/actions/random-cat/random",
 			"Tooltip": "Displays a random cat.",
 			"PropertyInspectorPath": "ui/random-cat.html",
-			"Controllers": [
-				"Keypad"
-			],
+			"Controllers": ["Keypad"],
 			"States": [
 				{
 					"Image": "imgs/actions/random-cat/random",
@@ -42,7 +40,7 @@
 	],
 	"Nodejs": {
 		"Version": "20",
-		"Debug": "--inspect=127.0.0.1:12342"
+		"Debug": "enabled"
 	},
 	"UUID": "com.elgato.cat-keys"
 }

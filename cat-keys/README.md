@@ -2,6 +2,8 @@
 
 A cute and cuddly plugin to demonstrate features of the Stream Deck SDK.
 
+![Cat Keys](cat-keys.gif)
+
 ## `willAppear` & `willDisappear`
 
 The Random Cat action utilizes these events to keep track of which keys are both visible to the user as well as set to be automatically updated. The action will also draw a new cat on the key as soon as it appears.
