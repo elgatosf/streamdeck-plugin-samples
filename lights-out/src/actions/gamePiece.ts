@@ -15,6 +15,7 @@ export class GamePiece extends SingletonAction {
 	 * When a new game piece appears, we need to put it into the device's grid
 	 */
 	onWillAppear(ev: WillAppearEvent): void | Promise<void> {
+		// We can't access action coordinates if the action is a part of a multi-action
 		if (ev.payload.isInMultiAction) {
 			return;
 		}
@@ -27,6 +28,7 @@ export class GamePiece extends SingletonAction {
 	 * When a game piece disappears, we need to remove it from the device's grid
 	 */
 	onWillDisappear(ev: WillDisappearEvent): Promise<void> | void {
+		// We can't access action coordinates if the action is a part of a multi-action
 		if (ev.payload.isInMultiAction) {
 			return;
 		}
@@ -40,6 +42,7 @@ export class GamePiece extends SingletonAction {
 	 * each cardinal direction, as well as the action itself
 	 */
 	async onKeyDown(ev: KeyDownEvent): Promise<void> {
+		// We can't access action coordinates if the action is a part of a multi-action
 		if (ev.payload.isInMultiAction) {
 			return;
 		}
