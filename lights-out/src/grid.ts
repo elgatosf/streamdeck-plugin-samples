@@ -14,8 +14,10 @@ export type GridItem = {
  * A boundless grid meant to hold our actions, which provides some convenient tools to manipulate the playing field
  */
 export class Grid {
-	static devices: Map<string, Grid>;
-	// Fetches a playing field associated with a specific Stream Deck device ID. Creates a new one if necessary.
+	private static devices: Map<string, Grid>;
+	/**
+	 * Fetches a playing field associated with a specific Stream Deck device ID. Creates a new one if necessary.
+	 */
 	static getDeviceGrid(deviceId: string) {
 		if (!this.devices) {
 			this.devices = new Map();
@@ -29,37 +31,60 @@ export class Grid {
 		return grid;
 	}
 
-	items: Map<string, GridItem>;
+	private items: Map<string, GridItem>;
 
 	constructor() {
 		this.items = new Map();
 	}
 
-	// Accessor functions that combine a column and row into a single composite key
+	/**
+	 * Sets the grid cell at the specified location to the provided value.
+	 */
 	set(column: number, row: number, value: GridItem): void {
 		this.items.set(this.compositeKey(column, row), value);
 	}
+
+	/**
+	 * Fetches the grid item at the specified location.
+	 */
 	get(column: number, row: number): GridItem | undefined {
 		return this.items.get(this.compositeKey(column, row));
 	}
+
+	/**
+	 * Deletes the item at the specified location.
+	 */
 	delete(column: number, row: number): void {
 		this.items.delete(this.compositeKey(column, row));
 	}
-	// Methods to join and split a row and column into a single key for use in our map
-	compositeKey(column: number, row: number): string {
+
+	/**
+	 * Converts a column and row into a single value for use in a map.
+	 */
+	private compositeKey(column: number, row: number): string {
 		if (column < 0 || row < 0) {
 			return "";
 		}
 		return `${column}/${row}`;
 	}
-	decompositeKey(key: string): { column: number; row: number } {
+
+	/**
+	 * Converts a composited key into a column and row value.
+	 */
+	private decomposeKey(key: string): { column: number; row: number } {
 		const split = key.split("/");
 		const column = parseInt(split[0]);
 		const row = parseInt(split[1]);
 		return { column, row };
 	}
 
-	// Toggles a light switch and returns the change in the number of lights that are on
+	/**
+	 * Toggles a light switch along with its neighbors.
+	 *
+	 * @param {boolean} updateAction If true, update the states of the affected action. Otherwise, only update our internal state.
+	 *
+	 * @returns The change in the number of lights that are on.
+	 */
 	toggleLight(column: number, row: number, updateAction?: boolean): number {
 		let changedLights = 0;
 
@@ -93,7 +118,9 @@ export class Grid {
 		return changedLights;
 	}
 
-	// Sets all tracked actions to the specified state
+	/**
+	 * Sets all tracked actions to the specified state.
+	 */
 	setAll(state: LightState) {
 		this.items.forEach((item) => {
 			const action = streamDeck.actions.createController(item.id);
@@ -102,7 +129,11 @@ export class Grid {
 		});
 	}
 
-	// Flashes all actions on and off a certain number of times, and then resets the playing field
+	/**
+	 * Flashes all actions on and off a certain number of times, leaving them all on at the end.
+	 *
+	 * @param {number} count The number of times to flash the actions on the grid.
+	 */
 	async flashAll(count: number): Promise<void> {
 		const offset = 100;
 		while (count-- > 0) {
@@ -115,7 +146,9 @@ export class Grid {
 		await setTimeout(offset * 2);
 	}
 
-	// Flashes a single action on and off
+	/**
+	 * Flashes a single action on and off
+	 */
 	async flashSingle(item: GridItem): Promise<void> {
 		const action = streamDeck.actions.createController(item.id);
 		action.setState(LIGHT_ON);
@@ -123,7 +156,9 @@ export class Grid {
 		action.setState(LIGHT_OFF);
 	}
 
-	// Checks the game state to see if the player has won, and if they have, play the win sequence
+	/**
+	 * Checks the game state to see if the player has won, and if they have, play the win sequence.
+	 */
 	tryWin() {
 		let won = true;
 		this.items.forEach((item) => {
@@ -136,7 +171,9 @@ export class Grid {
 		}
 	}
 
-	// Play the win sequence
+	/**
+	 * Plays the win sequence.
+	 */
 	async displayWin() {
 		// Grab all of the coordinates of actions and randomize them
 		let keys: string[] = [];
@@ -145,6 +182,8 @@ export class Grid {
 		});
 		keys.sort((a, b) => Math.random() - 0.5);
 
+		let flashCount = 0;
+
 		// Flash every key in the playing field
 		for (const key of keys) {
 			const item = this.items.get(key);
@@ -152,6 +191,11 @@ export class Grid {
 				continue;
 			}
 			await this.flashSingle(item);
+
+			// Just skip the sequence if it runs too long
+			if (flashCount++ > 15) {
+				break;
+			}
 		}
 
 		// Flash and reset the playing field
@@ -159,7 +203,9 @@ export class Grid {
 		this.randomize();
 	}
 
-	// Randomize the board through simulated play
+	/**
+	 * Randomize the board through simulated play.
+	 */
 	async randomize() {
 		// Get all action coordinates
 		let keys: string[] = [];
@@ -167,11 +213,14 @@ export class Grid {
 			keys.push(key);
 		});
 
-		// Tracking variables for light coverage
+		// Variables that track light coverage
 		const totalLights = keys.length;
 		let visibleLights = 0;
 
-		// Turn all lights off. Starting from the off state ensures the generated board is actually winnable.
+		// Turn the lights on for all actions while resetting
+		this.setAll(LIGHT_ON);
+
+		// Turn all lights off in our internal state tracking. Starting from the "off" state ensures the generated board can be completed
 		this.items.forEach((item) => (item.state = LIGHT_OFF));
 
 		// "Play" the game randomly for some number of iterations, while ensuring that at least 1/3 of the lights are on at the end
@@ -185,7 +234,7 @@ export class Grid {
 
 			// Pick random coordinate
 			const coord = keys[Math.floor(Math.random() * keys.length)];
-			const { column, row } = this.decompositeKey(coord);
+			const { column, row } = this.decomposeKey(coord);
 
 			// Toggle the randomly selected light
 			visibleLights += this.toggleLight(column, row);

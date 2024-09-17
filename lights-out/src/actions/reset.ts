@@ -11,7 +11,9 @@ export class Reset extends SingletonAction {
 		super();
 	}
 
-	// Reset the game
+	/**
+	 * Resets the game
+	 */
 	async onKeyDown(ev: KeyDownEvent): Promise<void> {
 		const grid = Grid.getDeviceGrid(ev.deviceId);
 		grid.randomize();

@@ -11,7 +11,9 @@ export class GamePiece extends SingletonAction {
 		super();
 	}
 
-	// When a new game piece appears, we need to put it into the device's grid
+	/**
+	 * When a new game piece appears, we need to put it into the device's grid
+	 */
 	onWillAppear(ev: WillAppearEvent): void | Promise<void> {
 		if (ev.payload.isInMultiAction) {
 			return;
@@ -21,7 +23,9 @@ export class GamePiece extends SingletonAction {
 		grid.set(column, row, { id: ev.action.id, state: ev.payload.state ? LIGHT_OFF : LIGHT_ON });
 	}
 
-	// When a game piece disappears, we need to remove it from the device's grid
+	/**
+	 * When a game piece disappears, we need to remove it from the device's grid
+	 */
 	onWillDisappear(ev: WillDisappearEvent): Promise<void> | void {
 		if (ev.payload.isInMultiAction) {
 			return;
@@ -31,8 +35,10 @@ export class GamePiece extends SingletonAction {
 		grid.delete(column, row);
 	}
 
-	// Performs a light switch toggle, which toggles the state of the 4 actions that border the pressed action in
-	// each cardinal direction, as well as the action itself
+	/**
+	 * Performs a light switch toggle, which toggles the state of the 4 actions that border the pressed action in
+	 * each cardinal direction, as well as the action itself
+	 */
 	async onKeyDown(ev: KeyDownEvent): Promise<void> {
 		if (ev.payload.isInMultiAction) {
 			return;
