@@ -7,8 +7,9 @@ import { Reset } from "./actions/reset";
 streamDeck.logger.setLevel(LogLevel.TRACE);
 
 // Register the game actions.
-streamDeck.actions.registerAction(new GamePiece());
-streamDeck.actions.registerAction(new Reset());
+const gamePiece = new GamePiece();
+streamDeck.actions.registerAction(gamePiece);
+streamDeck.actions.registerAction(new Reset(gamePiece));
 
 // Finally, connect to the Stream Deck.
 streamDeck.connect();
