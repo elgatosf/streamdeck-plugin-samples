@@ -20,6 +20,7 @@ export class RandomCat extends SingletonAction<RandomCatSettings> {
 	 * Sets the initial action image, stores the action for auto-updating, and establishes a timer for auto-updating.
 	 */
 	onWillAppear(ev: WillAppearEvent<RandomCatSettings>): void {
+		// Verify that the action is a key so we can call setRandomCat.
 		if (!ev.action.isKey()) return;
 
 		// Set a random cat image when the key appears.
@@ -28,6 +29,7 @@ export class RandomCat extends SingletonAction<RandomCatSettings> {
 		if (!this.timer) {
 			this.timer = setInterval(() => {
 				for (const action of this.actions) {
+					// Verify that the action is a key so we can call setRandomCat.
 					if (action.isKey()) {
 						action.getSettings().then((settings) => {
 							if (settings.autoUpdate) {
