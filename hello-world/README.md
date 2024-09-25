@@ -1,5 +1,7 @@
 # Hello World
 
+![Hello World!](hello-world.png)
+
 This is a simple plugin which demonstrates how you can include multi-language support within your plugin.
 
 Presently, Stream Deck, and by extension the Stream Deck SDK, supports the following languages:
