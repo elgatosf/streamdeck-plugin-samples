@@ -5,6 +5,8 @@
 
 # Stream Deck SDK Plugin Samples
 
+</div>
+
 In this repository, you can find a number of complete plugins for the Stream Deck software, each of which use the official [Stream Deck SDK for Node.js.](https://github.com/elgatosf/streamdeck) Within each sample, you can expect to find:
 * A readme, explaining which parts of the SDK the plugin is focused on;
 * An image/gif of the plugin in-software, possibly with a demonstration of its use;
