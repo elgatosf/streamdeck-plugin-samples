@@ -1,7 +1,6 @@
 import streamDeck, {
-	Action,
 	action,
-	DidReceiveSettingsEvent,
+	KeyAction,
 	KeyUpEvent,
 	SingletonAction,
 	WillAppearEvent,
@@ -15,64 +14,39 @@ const FIFTEEN_MINUTES = 15 * 60 * 1000;
  */
 @action({ UUID: 'com.elgato.cat-keys.random-cat' })
 export class RandomCat extends SingletonAction<RandomCatSettings> {
-	private visibleAutoActions = new Map<String, Action>();
-	private timer: NodeJS.Timeout | null = null;
+	private timer: NodeJS.Timeout | undefined;
 
 	/**
 	 * Sets the initial action image, stores the action for auto-updating, and establishes a timer for auto-updating.
 	 */
 	onWillAppear(ev: WillAppearEvent<RandomCatSettings>): void {
+		if (!ev.action.isKey()) return;
+
 		// Set a random cat image when the key appears.
 		this.setRandomCat(ev.action);
 
-		// If autoUpdate is enabled, set a random cat image every 15 minutes.
-		if (ev.payload.settings.autoUpdate) {
-			this.visibleAutoActions.set(ev.action.id, ev.action);
-
-			if (this.timer === null) {
-				this.timer = setInterval(() => {
-					this.visibleAutoActions.forEach((action) => {
-						this.setRandomCat(action);
-					});
-				}, FIFTEEN_MINUTES);
-			}
+		if (!this.timer) {
+			this.timer = setInterval(() => {
+				for (const action of this.actions) {
+					if (action.isKey()) {
+						action.getSettings().then((settings) => {
+							if (settings.autoUpdate) {
+								this.setRandomCat(action);
+							}
+						});
+					}
+				}
+			}, FIFTEEN_MINUTES);
 		}
 	}
 
 	/**
 	 * Removes the action from the auto-update list (as it is no longer visible) and clears the timer if no more actions are auto-updating.
 	 */
-	onWillDisappear(ev: WillDisappearEvent<RandomCatSettings>): void {
-		this.visibleAutoActions.delete(ev.action.id);
-
-		// If there are no more visible actions with autoUpdate enabled, clear the timer.
-		if (this.visibleAutoActions.size === 0) {
-			clearInterval(this.timer!);
-			this.timer = null;
-		}
-	}
-
-	/**
-	 * Adds or removes the action from the auto-update list based on the settings provided by the property inspector.
-	 */
-	onDidReceiveSettings(ev: DidReceiveSettingsEvent<RandomCatSettings>): Promise<void> | void {
-		if (ev.payload.settings.autoUpdate) {
-			this.visibleAutoActions.set(ev.action.id, ev.action);
-
-			if (this.timer === null) {
-				this.timer = setInterval(() => {
-					this.visibleAutoActions.forEach((action) => {
-						this.setRandomCat(action);
-					});
-				}, FIFTEEN_MINUTES);
-			}
-		} else {
-			this.visibleAutoActions.delete(ev.action.id);
-
-			if (this.visibleAutoActions.size === 0) {
-				clearInterval(this.timer!);
-				this.timer = null;
-			}
+	async onWillDisappear(ev: WillDisappearEvent<RandomCatSettings>): Promise<void> {
+		if (this.actions.next().done) {
+			clearInterval(this.timer);
+			this.timer = undefined;
 		}
 	}
 
@@ -87,7 +61,7 @@ export class RandomCat extends SingletonAction<RandomCatSettings> {
 	 * Fetches a random cat image and sets it as the action's image.
 	 * @param action The action in which to apply the new cat image.
 	 */
-	private async setRandomCat(action: Action) {
+	private async setRandomCat(action: KeyAction) {
 		try {
 			const response = await fetch('https://cataas.com/cat?width=144&height=144');
 			const buffer = await response.arrayBuffer();

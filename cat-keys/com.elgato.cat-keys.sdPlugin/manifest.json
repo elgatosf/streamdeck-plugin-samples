@@ -10,7 +10,9 @@
 			"Icon": "imgs/actions/random-cat/random",
 			"Tooltip": "Displays a random cat.",
 			"PropertyInspectorPath": "ui/random-cat.html",
-			"Controllers": ["Keypad"],
+			"Controllers": [
+				"Keypad"
+			],
 			"States": [
 				{
 					"Image": "imgs/actions/random-cat/random",
