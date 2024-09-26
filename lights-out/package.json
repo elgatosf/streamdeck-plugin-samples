@@ -6,7 +6,7 @@
 	"type": "module",
 	"prettier": "@elgato/prettier-config",
 	"devDependencies": {
-		"@elgato/cli": "^0.3.1",
+		"@elgato/cli": "^1.0.0",
 		"@elgato/prettier-config": "^0.2.3",
 		"@rollup/plugin-commonjs": "^25.0.5",
 		"@rollup/plugin-node-resolve": "^15.2.2",
@@ -19,6 +19,6 @@
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
-		"@elgato/streamdeck": "^0.4.0-beta.5"
+		"@elgato/streamdeck": "^1.0.0"
 	}
 }

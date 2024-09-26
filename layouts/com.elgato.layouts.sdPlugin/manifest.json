@@ -70,7 +70,7 @@
 			}
 		}
 	],
-	"Category": "Layouts",
+	"Category": "Layout Previews",
 	"CategoryIcon": "imgs/plugin/category-icon",
 	"CodePath": "bin/plugin.js",
 	"Description": "A plugin to demonstate encoder layouts.",
