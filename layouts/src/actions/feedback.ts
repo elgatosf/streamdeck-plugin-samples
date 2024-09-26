@@ -9,6 +9,9 @@ export class Feedback extends SingletonAction {
 	 * Sets the initial value when the action appears on Stream Deck.
 	 */
 	onWillAppear(ev: WillAppearEvent<DialSettings>): Promise<void> | void {
+		// Verify that the action is a dial so we can call setFeedback.
+		if (!ev.action.isDial()) return;
+
 		let { value = 50 } = ev.payload.settings;
 
 		ev.action.setFeedback({ value, indicator: { value } });
