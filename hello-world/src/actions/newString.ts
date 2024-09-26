@@ -2,6 +2,7 @@ import streamdeck, {
 	Action,
 	action,
 	DidReceiveSettingsEvent,
+	KeyAction,
 	KeyDownEvent,
 	Language,
 	SingletonAction,
@@ -17,6 +18,8 @@ export class NewString extends SingletonAction<NewStringSettings> {
 	 * Called whenever a NewString action is created by the Stream Deck software
 	 */
 	async onWillAppear(ev: WillAppearEvent<NewStringSettings>): Promise<void> {
+		if (!ev.action.isKey()) return;
+
 		let settings = ev.payload.settings;
 		// If we don't have a title key already, set it to "clickme"
 		if (!ev.payload.settings.titleKey) {
@@ -30,6 +33,8 @@ export class NewString extends SingletonAction<NewStringSettings> {
 	 * Called when the Property Inspector changes the selected language
 	 */
 	async onDidReceiveSettings(ev: DidReceiveSettingsEvent<NewStringSettings>): Promise<void> {
+		if (!ev.action.isKey()) return;
+
 		this.displayTitleFromSettings(ev.payload.settings, ev.action);
 	}
 
@@ -50,7 +55,7 @@ export class NewString extends SingletonAction<NewStringSettings> {
 	/**
 	 * Fetches the settings from the provided settings object and then displays it as a title on the action
 	 */
-	async displayTitleFromSettings(settings: NewStringSettings, action: Action<NewStringSettings>) {
+	async displayTitleFromSettings(settings: NewStringSettings, action: KeyAction<NewStringSettings>) {
 		// Fetch the string that we have saved in the settings
 		const titleKey = settings.titleKey;
 		if (!titleKey) {

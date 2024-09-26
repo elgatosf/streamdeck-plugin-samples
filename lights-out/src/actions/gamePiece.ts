@@ -78,12 +78,12 @@ export class GamePiece extends SingletonAction<GamePieceSettings> {
 			return;
 		}
 
-		for (const action of this.adjacentItems(ev.deviceId, ev.payload.coordinates)) {
+		for (const action of this.adjacentItems(ev.action.device.id, ev.payload.coordinates)) {
 			let newState = this.toggleState(action.id);
 			action.setState(newState);
 		}
 
-		this.tryWin(ev.deviceId);
+		this.tryWin(ev.action.device.id);
 	}
 
 	/**
@@ -91,7 +91,7 @@ export class GamePiece extends SingletonAction<GamePieceSettings> {
 	 */
 	setAll(deviceId: string, state: LightState) {
 		for (const action of this.deviceItems(deviceId)) {
-			if (!action.isKey() || action.isInMultiAction) {
+			if (!action.isKey() || action.isInMultiAction()) {
 				continue;
 			}
 			this.states.set(action.id, state);
