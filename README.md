@@ -7,11 +7,11 @@
 
 </div>
 
-In this repository, you can find a number of complete plugins for the Stream Deck software, each of which use the official [Stream Deck SDK for Node.js.](https://github.com/elgatosf/streamdeck) Within each sample, you can expect to find:
-* A readme, explaining which parts of the SDK the plugin is focused on;
-* An image/gif of the plugin in-software, possibly with a demonstration of its use;
-* A prepared .streamDeckPlugin file which can be installed without building the sample;
-* Typescript project files that can be used to modify and build the sample as you see fit.
+In this repository, you can find a number of complete plugins for the Stream Deck app, each of which use the official [Stream Deck SDK](https://github.com/elgatosf/streamdeck). Within each sample, you can expect to find:
+* A readme, explaining which parts of the SDK the plugin is focused on.
+* An image/gif of the plugin in-app, possibly with a demonstration of its use.
+* A prepared .streamDeckPlugin file which can be installed without building the sample.
+* TypeScript project files that can be used to modify and build the sample as you see fit.
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ npm install -g @elgato/cli
 
 ## Building and Running
 
-Any of the samples have pre-built binaries which can be installed into Stream Deck immediately. Just open the included .streamDeckPlugin file.
+All of the samples have pre-built binaries which can be installed into Stream Deck immediately. Just open the included .streamDeckPlugin file.
 
 If you would like to build a sample yourself, you can do so with the following steps
 ```bash
