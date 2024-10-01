@@ -4,6 +4,7 @@
 		"customConditions": [
 			"node"
 		],
+		"noImplicitOverride": true,
 		"module": "ES2022",
 		"moduleResolution": "Bundler"
 	},

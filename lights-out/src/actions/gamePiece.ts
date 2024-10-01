@@ -12,7 +12,7 @@ export class GamePiece extends SingletonAction<GamePieceSettings> {
 		super();
 	}
 
-	onWillAppear(ev: WillAppearEvent<GamePieceSettings>): Promise<void> | void {
+	override onWillAppear(ev: WillAppearEvent<GamePieceSettings>): Promise<void> | void {
 		// Find and store the existing state of any visible action
 		if (ev.action.isKey() && ev.payload.state !== undefined) {
 			this.states.set(ev.action.id, ev.payload.state);
@@ -72,7 +72,7 @@ export class GamePiece extends SingletonAction<GamePieceSettings> {
 	 * Performs a light switch toggle, which toggles the state of the 4 actions that border the pressed action in
 	 * each cardinal direction, as well as the action itself
 	 */
-	async onKeyDown(ev: KeyDownEvent<GamePieceSettings>): Promise<void> {
+	override async onKeyDown(ev: KeyDownEvent<GamePieceSettings>): Promise<void> {
 		// We can't access action coordinates if the action is a part of a multi-action
 		if (ev.payload.isInMultiAction) {
 			return;

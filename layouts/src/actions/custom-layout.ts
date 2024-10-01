@@ -8,7 +8,7 @@ export class CustomLayout extends SingletonAction {
 	/**
 	 * Switch the layout and update values based on the dial rotation.
 	 */
-	async onDialRotate(ev: DialRotateEvent<DialSettings>): Promise<void> {
+	override async onDialRotate(ev: DialRotateEvent<DialSettings>): Promise<void> {
 		let { value = 0 } = ev.payload.settings;
 		const { ticks } = ev.payload;
 		const adjustment = ticks > 0 ? 1 : -1;
