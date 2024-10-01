@@ -8,7 +8,7 @@ export class BuiltInLayout extends SingletonAction {
 	/**
 	 * Switch the layout and update the title based on the dial rotation.
 	 */
-	onDialRotate(ev: DialRotateEvent<DialSettings>): Promise<void> | void {
+	override onDialRotate(ev: DialRotateEvent<DialSettings>): Promise<void> | void {
 		let { value = 0 } = ev.payload.settings;
 		const { ticks } = ev.payload;
 		const adjustment = ticks > 0 ? 1 : -1;

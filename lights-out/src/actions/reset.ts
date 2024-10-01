@@ -18,7 +18,7 @@ export class Reset extends SingletonAction {
 	/**
 	 * Resets the game
 	 */
-	async onKeyDown(ev: KeyDownEvent): Promise<void> {
+	override async onKeyDown(ev: KeyDownEvent): Promise<void> {
 		this.gamePiece.setAll(ev.action.device.id, LIGHT_OFF);
 		await setTimeout(500);
 		this.gamePiece.setAll(ev.action.device.id, LIGHT_ON);

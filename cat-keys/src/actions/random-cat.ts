@@ -19,7 +19,7 @@ export class RandomCat extends SingletonAction<RandomCatSettings> {
 	/**
 	 * Sets the initial action image, stores the action for auto-updating, and establishes a timer for auto-updating.
 	 */
-	onWillAppear(ev: WillAppearEvent<RandomCatSettings>): void {
+	override onWillAppear(ev: WillAppearEvent<RandomCatSettings>): void {
 		// Verify that the action is a key so we can call setRandomCat.
 		if (!ev.action.isKey()) return;
 
@@ -45,7 +45,7 @@ export class RandomCat extends SingletonAction<RandomCatSettings> {
 	/**
 	 * Removes the action from the auto-update list (as it is no longer visible) and clears the timer if no more actions are auto-updating.
 	 */
-	async onWillDisappear(ev: WillDisappearEvent<RandomCatSettings>): Promise<void> {
+	override async onWillDisappear(ev: WillDisappearEvent<RandomCatSettings>): Promise<void> {
 		if (this.actions.next().done) {
 			clearInterval(this.timer);
 			this.timer = undefined;
@@ -55,7 +55,7 @@ export class RandomCat extends SingletonAction<RandomCatSettings> {
 	/**
 	 * Sets a new random cat image when the key is pressed.
 	 */
-	onKeyUp(ev: KeyUpEvent<RandomCatSettings>): void | Promise<void> {
+	override onKeyUp(ev: KeyUpEvent<RandomCatSettings>): void | Promise<void> {
 		this.setRandomCat(ev.action);
 	}
 

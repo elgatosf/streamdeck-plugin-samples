@@ -17,7 +17,7 @@ export class NewString extends SingletonAction<NewStringSettings> {
 	/**
 	 * Called whenever a NewString action is created by the Stream Deck software
 	 */
-	async onWillAppear(ev: WillAppearEvent<NewStringSettings>): Promise<void> {
+	override async onWillAppear(ev: WillAppearEvent<NewStringSettings>): Promise<void> {
 		if (!ev.action.isKey()) return;
 
 		let settings = ev.payload.settings;
@@ -32,7 +32,7 @@ export class NewString extends SingletonAction<NewStringSettings> {
 	/**
 	 * Called when the Property Inspector changes the selected language
 	 */
-	async onDidReceiveSettings(ev: DidReceiveSettingsEvent<NewStringSettings>): Promise<void> {
+	override async onDidReceiveSettings(ev: DidReceiveSettingsEvent<NewStringSettings>): Promise<void> {
 		if (!ev.action.isKey()) return;
 
 		this.displayTitleFromSettings(ev.payload.settings, ev.action);
@@ -41,7 +41,7 @@ export class NewString extends SingletonAction<NewStringSettings> {
 	/**
 	 * Called when the user presses a key with this action on their Stream Deck
 	 */
-	async onKeyDown(ev: KeyDownEvent<NewStringSettings>): Promise<void> {
+	override async onKeyDown(ev: KeyDownEvent<NewStringSettings>): Promise<void> {
 		// Pick a random string
 		const titleKey = this.pickRandomKey();
 
