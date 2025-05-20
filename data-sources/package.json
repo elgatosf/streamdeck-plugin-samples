@@ -1,7 +1,7 @@
 {
     "scripts": {
         "build": "rollup -c",
-        "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.elgato.data-sources\""
+        "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.elgato.product-viewer\""
     },
     "type": "module",
     "devDependencies": {

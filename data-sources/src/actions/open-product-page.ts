@@ -6,7 +6,7 @@ import type { DataSourcePayload, DataSourceResult } from "../sdpi";
  *
  * After selecting a product within the property inspector, pressing the button will open the product's page.
  */
-@action({ UUID: "com.elgato.data-sources.open-product-page" })
+@action({ UUID: "com.elgato.product-viewer.open-product-page" })
 export class OpenProductPage extends SingletonAction<Settings> {
 	/**
 	 * Opens the selected product's page in the user's default browser.
