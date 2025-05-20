@@ -1,6 +1,6 @@
-# Open Product Page
+# Product Viewer
 
-![Open Product Page](open-product-page.png)
+![Product Viewer](product-viewer.png)
 
 This sample plugin allows users to select a Stream Deck product from a drop-down within the property inspector, and then open that product's page within their default browser.
 
