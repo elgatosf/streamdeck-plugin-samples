@@ -1,9 +1,9 @@
-import streamDeck, { LogLevel } from '@elgato/streamdeck';
+import streamDeck from '@elgato/streamdeck';
 
 import { RandomCat } from './actions/random-cat';
 
 // We can enable "trace" logging so that all messages between the Stream Deck, and the plugin are recorded.
-streamDeck.logger.setLevel(LogLevel.TRACE);
+streamDeck.logger.setLevel('trace');
 
 // Register the random cat action.
 streamDeck.actions.registerAction(new RandomCat());
