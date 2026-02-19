@@ -2,6 +2,7 @@
 	"scripts": {
 		"build": "rollup -c",
 		"watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.elgato.image-resizer\"",
+		"postinstall": "npm run install-sharp",
 		"install-sharp": "npm run sharp-mac && npm run sharp-win",
 		"sharp-mac": "npm install --cpu=arm64 --os=darwin sharp",
 		"sharp-win": "npm install --cpu=x64 --os=win32 sharp"

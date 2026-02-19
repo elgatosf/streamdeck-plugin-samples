@@ -2,6 +2,29 @@
 
 A simple image resizer plugin to demonstrate utilizing native dependencies in a Stream Deck plugin. This sample uses [sharp](https://sharp.pixelplumbing.com/) for image processing, which relies on platform-specific native binaries.
 
+<details>
+<summary><strong>Quick Start</strong></summary>
+
+1. Install dependencies (this also fetches platform-specific native binaries for `sharp`).
+
+    ```sh
+    npm install
+    ```
+
+2. Build the plugin.
+
+    ```sh
+    npm run build
+    ```
+
+3. Link the plugin to Stream Deck.
+
+    ```sh
+    streamdeck link com.elgato.image-resizer.sdPlugin
+    ```
+
+</details>
+
 ## Configuration Changes for Native Modules
 
 ### Installing Platform-Specific Binaries
