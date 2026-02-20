@@ -5,7 +5,6 @@
 		<meta charset="utf-8" />
 		<script src="https://sdpi-components.dev/releases/v4/sdpi-components.js"></script>
 	</head>
-
 	<body>
 		<sdpi-item label="File">
 			<sdpi-file setting="imagePath" accept="image/png, image/jpeg"></sdpi-file>
@@ -18,12 +17,10 @@
 			</sdpi-select>
 		</sdpi-item>
 		<sdpi-item label="Width (px)">
-			<sdpi-textfield setting="width" pattern="/^[0-9]+$/" placeholder="1920" required>
-			</sdpi-textfield>
+			<sdpi-textfield setting="width" pattern="^[0-9]+$" placeholder="1920"> </sdpi-textfield>
 		</sdpi-item>
 		<sdpi-item label="Height (px)">
-			<sdpi-textfield setting="height" pattern="/^[0-9]+$/" placeholder="1080" required>
-			</sdpi-textfield>
+			<sdpi-textfield setting="height" pattern="^[0-9]+$" placeholder="1080"> </sdpi-textfield>
 		</sdpi-item>
 	</body>
 </html>

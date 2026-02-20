@@ -37,7 +37,7 @@ Native modules like `sharp` ship pre-built binaries for each OS/architecture. Si
 "sharp-win": "npm install --cpu=x64 --os=win32 sharp"
 ```
 
-Run `npm run install-sharp` after `npm install` to download binaries for all target platforms.
+The `install-sharp` script runs automatically via npm's `postinstall` hook after `npm install`, downloading binaries for all target platforms.
 
 ### Rollup Config (`rollup.config.mjs`)
 
