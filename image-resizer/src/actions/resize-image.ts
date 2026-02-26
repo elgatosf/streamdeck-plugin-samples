@@ -31,7 +31,7 @@ export class ResizeImage extends SingletonAction<ResizeImageSettings> {
 				return;
 			}
 
-			const { dir, name, ext } = path.parse(imagePath);
+			const { dir, name } = path.parse(imagePath);
 			const outputPath = path.join(dir, `${name} (${parsedWidth}x${parsedHeight}).${extension}`);
 
 			await sharp(imagePath).resize(parsedWidth, parsedHeight).toFormat(extension).toFile(outputPath);
