@@ -9,7 +9,9 @@
 			"Icon": "imgs/plugin/resize",
 			"Tooltip": "Resizes an image.",
 			"PropertyInspectorPath": "ui/resize-image.html",
-			"Controllers": ["Keypad"],
+			"Controllers": [
+				"Keypad"
+			],
 			"States": [
 				{
 					"Image": "imgs/plugin/resize",
