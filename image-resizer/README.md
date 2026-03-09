@@ -29,20 +29,29 @@ A simple image resizer plugin to demonstrate utilizing native dependencies in a 
 
 ### Installing Platform-Specific Binaries
 
-Native modules like `sharp` ship pre-built binaries for each OS/architecture. Since Stream Deck plugins must bundle binaries for all supported platforms, the install scripts in [package.json](package.json) fetch binaries for both macOS (arm64) and Windows (x64) in two locations:
+Native modules like `sharp` ship pre-built binaries for each OS and architecture. This sample now keeps the setup split by responsibility:
 
-1. **Project root** — so that tooling and IntelliSense can resolve the module during development.
-2. **Plugin folder (`*.sdPlugin`)** — so the native `.node` files are included when the plugin folder is zipped and distributed.
+1. **Project root** — depends on `sharp` so local development, TypeScript, and bundling can resolve the module normally for the current machine.
+2. **Plugin folder (`*.sdPlugin`)** — declares `sharp` plus the platform packages that must ship with the plugin so the final `.sdPlugin` contains the native binaries for supported targets.
+
+The root [package.json](package.json) now uses a single postinstall step to install the plugin-bundled dependencies into the Stream Deck plugin folder:
 
 ```json
-"install-sharp": "npm run sharp-mac && npm run sharp-win && npm run sdplugin-sharp-mac && npm run sdplugin-sharp-win",
-"sharp-mac": "npm install --cpu=arm64 --os=darwin sharp --ignore-scripts",
-"sharp-win": "npm install --cpu=x64 --os=win32 sharp --ignore-scripts",
-"sdplugin-sharp-mac": "npm install --prefix com.elgato.image-resizer.sdPlugin --cpu=arm64 --os=darwin sharp --ignore-scripts",
-"sdplugin-sharp-win": "npm install --prefix com.elgato.image-resizer.sdPlugin --cpu=x64 --os=win32 sharp --ignore-scripts"
+"postinstall": "npm run sdplugin-sharp",
+"sdplugin-sharp": "npm install --prefix com.elgato.image-resizer.sdPlugin --ignore-scripts --force sharp @img/sharp-win32-x64 @img/sharp-darwin-arm64"
 ```
 
-The `install-sharp` script runs automatically via npm's `postinstall` hook after `npm install`.
+The plugin's own [com.elgato.image-resizer.sdPlugin/package.json](com.elgato.image-resizer.sdPlugin/package.json) explicitly lists the runtime packages that need to be present inside the distributable plugin:
+
+```json
+"dependencies": {
+    "@img/sharp-darwin-arm64": "^0.34.5",
+    "@img/sharp-win32-x64": "^0.34.5",
+    "sharp": "^0.34.5"
+}
+```
+
+This means `npm install` at the repo root still sets up development dependencies, and the `postinstall` hook ensures the `.sdPlugin` folder also contains the native Sharp packages required at runtime.
 
 ### Rollup Config (`rollup.config.mjs`)
 

@@ -2,12 +2,8 @@
     "scripts": {
         "build": "rollup -c",
         "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.elgato.image-resizer\"",
-        "postinstall": "npm run install-sharp",
-        "install-sharp": "npm run sharp-mac && npm run sharp-win && npm run sdplugin-sharp-mac && npm run sdplugin-sharp-win",
-        "sharp-mac": "npm install --cpu=arm64 --os=darwin sharp --ignore-scripts",
-        "sharp-win": "npm install --cpu=x64 --os=win32 sharp --ignore-scripts",
-        "sdplugin-sharp-mac": "npm install --prefix com.elgato.image-resizer.sdPlugin --cpu=arm64 --os=darwin sharp --ignore-scripts",
-        "sdplugin-sharp-win": "npm install --prefix com.elgato.image-resizer.sdPlugin --cpu=x64 --os=win32 sharp --ignore-scripts"
+        "postinstall": "npm run sdplugin-sharp",
+        "sdplugin-sharp": "npm install --prefix com.elgato.image-resizer.sdPlugin --ignore-scripts --force sharp @img/sharp-win32-x64 @img/sharp-darwin-arm64"
     },
     "type": "module",
     "prettier": "@elgato/prettier-config",
