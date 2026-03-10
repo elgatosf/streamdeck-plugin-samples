@@ -2,7 +2,7 @@
     "scripts": {
         "build": "rollup -c",
         "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.elgato.image-resizer\"",
-        "postinstall": "pnpm --dir com.elgato.image-resizer.sdPlugin install sharp"
+        "postinstall": "pnpm --dir com.elgato.image-resizer.sdPlugin install --frozen-lockfile"
     },
     "packageManager": "pnpm@10.32.0",
     "type": "module",
