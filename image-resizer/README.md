@@ -38,7 +38,7 @@ The root [package.json](package.json) now uses a single postinstall step to inst
 
 ```json
 "postinstall": "npm run sdplugin-sharp",
-"sdplugin-sharp": "npm install --prefix com.elgato.image-resizer.sdPlugin --ignore-scripts --force sharp @img/sharp-win32-x64 @img/sharp-darwin-arm64"
+"sdplugin-sharp": "npm install --prefix com.elgato.image-resizer.sdPlugin --ignore-scripts --force sharp @img/sharp-win32-x64 @img/sharp-darwin-arm64 @img/sharp-libvips-darwin-arm64"
 ```
 
 The plugin's own [com.elgato.image-resizer.sdPlugin/package.json](com.elgato.image-resizer.sdPlugin/package.json) explicitly lists the runtime packages that need to be present inside the distributable plugin:
@@ -46,6 +46,7 @@ The plugin's own [com.elgato.image-resizer.sdPlugin/package.json](com.elgato.ima
 ```json
 "dependencies": {
     "@img/sharp-darwin-arm64": "^0.34.5",
+    "@img/sharp-libvips-darwin-arm64": "^1.2.4",
     "@img/sharp-win32-x64": "^0.34.5",
     "sharp": "^0.34.5"
 }
