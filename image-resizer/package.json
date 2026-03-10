@@ -2,9 +2,9 @@
     "scripts": {
         "build": "rollup -c",
         "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.elgato.image-resizer\"",
-        "postinstall": "npm run sdplugin-sharp",
-        "sdplugin-sharp": "npm install --prefix com.elgato.image-resizer.sdPlugin --ignore-scripts --force sharp @img/sharp-win32-x64 @img/sharp-darwin-arm64 @img/sharp-libvips-darwin-arm64"
+        "postinstall": "pnpm --dir com.elgato.image-resizer.sdPlugin install sharp"
     },
+    "packageManager": "pnpm@10.32.0",
     "type": "module",
     "prettier": "@elgato/prettier-config",
     "devDependencies": {

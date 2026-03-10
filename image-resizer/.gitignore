@@ -5,3 +5,6 @@ node_modules/
 *.sdPlugin/bin
 *.sdPlugin/logs
 *.sdPlugin/node_modules
+
+# Stream Deck Plugin Build
+*.streamDeckPlugin
