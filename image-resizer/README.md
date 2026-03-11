@@ -14,7 +14,7 @@ A simple image resizer plugin to demonstrate utilizing native dependencies in a 
 2. Build the plugin.
 
     ```sh
-    npm run build
+    pnpm build
     ```
 
 3. Link the plugin to Stream Deck.
