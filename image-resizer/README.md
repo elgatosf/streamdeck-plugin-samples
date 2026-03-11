@@ -25,23 +25,29 @@ A simple image resizer plugin to demonstrate utilizing native dependencies in a 
 
 </details>
 
-## Configuration Changes for Native Modules
+## pnpm Setup for Native Modules
 
-### Installing Platform-Specific Binaries
+Native modules like `sharp` need platform-specific binaries at runtime. We use pnpm here because it can install the macOS and Windows variants into the `.sdPlugin` folder during development, so the plugin bundle includes the files Stream Deck needs when the plugin is bundled.
 
-Native modules like `sharp` ship pre-built binaries for each OS and architecture. This sample now keeps the setup split by responsibility:
+### 1. Use pnpm at the repo root
 
-1. **Project root** — depends on `sharp` so local development, TypeScript, and bundling can resolve the module normally for the current machine.
-2. **Plugin folder (`*.sdPlugin`)** — depends on `sharp` and uses pnpm configuration to install the platform-specific packages that must ship with the plugin.
-
-The root [package.json](package.json) uses pnpm for the repo and runs a single postinstall step to install the plugin-bundled dependencies into the Stream Deck plugin folder:
+In [package.json](package.json):
 
 ```json
 "packageManager": "pnpm@10.32.0",
-"postinstall": "pnpm --dir com.elgato.image-resizer.sdPlugin install"
+"postinstall": "pnpm --dir com.elgato.image-resizer.sdPlugin install --frozen-lockfile"
 ```
 
-The plugin's own [com.elgato.image-resizer.sdPlugin/package.json](com.elgato.image-resizer.sdPlugin/package.json) only needs to declare `sharp`:
+- `packageManager` makes sure contributors use pnpm.
+- `postinstall` installs the runtime dependencies inside the plugin folder after the main repo install finishes.
+- `--dir` targets the `.sdPlugin` folder, because that is the bundle shipped to Stream Deck.
+- `--frozen-lockfile` keeps installs repeatable.
+
+The root project also depends on `sharp` so local TypeScript, bundling, and development tooling can resolve it normally.
+
+### 2. Declare the native dependency in the plugin bundle
+
+In [com.elgato.image-resizer.sdPlugin/package.json](com.elgato.image-resizer.sdPlugin/package.json):
 
 ```json
 "dependencies": {
@@ -49,16 +55,18 @@ The plugin's own [com.elgato.image-resizer.sdPlugin/package.json](com.elgato.ima
 }
 ```
 
-The platform matrix now lives in [com.elgato.image-resizer.sdPlugin/pnpm-workspace.yaml](com.elgato.image-resizer.sdPlugin/pnpm-workspace.yaml):
+This keeps `sharp` in the actual plugin package, not just in the repo root.
+
+### 3. Add a small pnpm config in the plugin folder
+
+In [com.elgato.image-resizer.sdPlugin/pnpm-workspace.yaml](com.elgato.image-resizer.sdPlugin/pnpm-workspace.yaml):
 
 ```yaml
+packages:
+    - .
+
 nodeLinker: hoisted
 packageImportMethod: copy
-
-ignoredOptionalDependencies:
-    - '@img/sharp-linux-*'
-    - '@img/sharp-libvips-linux*'
-    - '@img/sharp-wasm32'
 
 supportedArchitectures:
     os:
@@ -67,15 +75,18 @@ supportedArchitectures:
     cpu:
         - x64
         - arm64
+
+onlyBuiltDependencies:
+    - sharp
 ```
 
-With that config, pnpm installs the required `@img/sharp-*` packages automatically as Sharp optional dependencies. Contributors no longer need to know or manually list which runtime packages are required for macOS and Windows.
+- `packages: - .` treats the plugin folder as its own small pnpm workspace.
+- `nodeLinker: hoisted` produces a flatter `node_modules` layout.
+- `packageImportMethod: copy` copies files instead of using symlinks which can sometimes cause issues with zipping and unzipping.
+- `supportedArchitectures` tells pnpm which OS and CPU variants to install for optional native packages.
+- `onlyBuiltDependencies` allows the native build/install step only for `sharp`.
 
-The `nodeLinker: hoisted` and `packageImportMethod: copy` settings keep the plugin folder's `node_modules` flat and non-symlinked, which is a better fit for packaging a self-contained `.sdPlugin` bundle.
-
-The `ignoredOptionalDependencies` and pnpm override rules also prune unsupported Sharp optional packages from the plugin dependency graph, so Linux and wasm artifacts are not installed for this sample.
-
-This means `pnpm install` at the repo root still sets up development dependencies, and the `postinstall` hook ensures the `.sdPlugin` folder also contains the native Sharp packages required at runtime.
+With that in place, `pnpm install` at the repo root installs normal dev dependencies first, then installs the plugin's runtime dependencies with the macOS and Windows Sharp binaries included.
 
 ### Rollup Config (`rollup.config.mjs`)
 
