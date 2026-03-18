@@ -41,16 +41,6 @@ const config = {
 		}),
 		json(),
 		!isWatching && terser(),
-		{
-			name: "emit-module-package-file",
-			generateBundle() {
-				this.emitFile({
-					fileName: "package.json",
-					source: `{ "type": "module" }`,
-					type: "asset",
-				});
-			},
-		},
 	],
 	external: ["sharp"],
 };
