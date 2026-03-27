@@ -21,11 +21,11 @@ type CounterSettings = {
  */
 @action({ UUID: "com.elgato.counter.action" })
 export class IncrementCounter extends SingletonAction<CounterSettings> {
-	/** Timer used to detect a long press reset. */
-	private resetTimer?: NodeJS.Timeout;
-
-	/** Tracks whether the current press already triggered a reset. */
-	private didReset = false;
+	/** Tracks per-action press state to avoid cross-key races. */
+	private pressState = new Map<
+		string,
+		{ resetTimer?: NodeJS.Timeout; didReset: boolean }
+	>();
 
 	/**
 	 * Updates the key title when the action appears.
@@ -41,23 +41,34 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 	 * the counter is reset to `0`.
 	 */
 	override async onKeyDown(ev: KeyDownEvent<CounterSettings>): Promise<void> {
-		this.didReset = false;
+		const state = this.pressState.get(ev.action.id) ?? { didReset: false };
+		state.didReset = false;
 
-		this.resetTimer = setTimeout(() => {
-			this.didReset = true;
+		if (state.resetTimer) {
+			clearTimeout(state.resetTimer);
+		}
+
+		state.resetTimer = setTimeout(() => {
+			state.didReset = true;
 			void ev.action.setTitle("0");
 			void ev.action.setSettings({ ...ev.payload.settings, count: 0 });
 		}, 1500);
+
+		this.pressState.set(ev.action.id, state);
 	}
 
 	/**
 	 * Increments the counter if the key was released before a reset occurred.
 	 */
 	override async onKeyUp(ev: KeyUpEvent<CounterSettings>): Promise<void> {
-		clearTimeout(this.resetTimer);
+		const state = this.pressState.get(ev.action.id);
 
-		if (this.didReset) {
-			this.didReset = false;
+		if (state?.resetTimer) {
+			clearTimeout(state.resetTimer);
+		}
+
+		if (state?.didReset) {
+			this.pressState.delete(ev.action.id);
 			return;
 		}
 
@@ -67,5 +78,6 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 
 		await ev.action.setSettings(settings);
 		await ev.action.setTitle(`${settings.count}`);
+		this.pressState.delete(ev.action.id);
 	}
 }
