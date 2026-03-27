@@ -10,6 +10,7 @@
 			"Tooltip": "Displays a count, which increments on press.",
 			"PropertyInspectorPath": "ui/increment-counter.html",
 			"Controllers": ["Keypad"],
+			"UserTitleEnabled": false,
 			"States": [
 				{
 					"Image": "imgs/actions/counter/key",
