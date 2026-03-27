@@ -7,7 +7,7 @@
     "devDependencies": {
         "@elgato/cli": "^1.7.1",
         "@tsconfig/node20": "^20.1.2",
-        "@types/node": "~20.15.0",
+        "@types/node": "^20.19.0",
         "rolldown": "^1.0.0-rc.6",
         "typescript": "^5.2.2"
     },
