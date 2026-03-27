@@ -31,9 +31,12 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 	 */
 	override async onKeyDown(ev: KeyDownEvent<CounterSettings>): Promise<void> {
 		const settings = { ...ev.payload.settings };
+		// default incrementBy to 1 if it's not set
 		settings.incrementBy ??= 1;
+		// increment the count
 		settings.count = (settings.count ?? 0) + settings.incrementBy;
 
+		// Update the settings and title to reflect the new count.
 		await ev.action.setSettings(settings);
 		await ev.action.setTitle(`${settings.count}`);
 
