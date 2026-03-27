@@ -32,9 +32,6 @@ const config = defineConfig({
 			buildStart() {
 				this.addWatchFile(`${sdPluginFolder}/manifest.json`);
 			},
-		},
-		{
-			name: "restart-stream-deck",
 			buildEnd() {
 				if (isWatching) {
 					exec(`streamdeck restart ${sdPlugin}`, (error, stdout, stderr) => {
@@ -43,7 +40,7 @@ const config = defineConfig({
 						if (error) console.error("Failed to restart Stream Deck:", error.message);
 					});
 				}
-			},
+			}
 		},
 		{
 			name: "emit-module-package-file",
