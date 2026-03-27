@@ -1,10 +1,4 @@
-import {
-	action,
-	KeyDownEvent,
-	KeyUpEvent,
-	SingletonAction,
-	WillAppearEvent,
-} from "@elgato/streamdeck";
+import { action, KeyDownEvent, KeyUpEvent, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
 
 /**
  * Persistent settings used by {@link IncrementCounter}.
@@ -22,18 +16,13 @@ type CounterSettings = {
 @action({ UUID: "com.elgato.counter.action" })
 export class IncrementCounter extends SingletonAction<CounterSettings> {
 	/** Tracks per-action press state to avoid cross-key races. */
-	private pressState = new Map<
-		string,
-		{ resetTimer?: NodeJS.Timeout; didReset: boolean }
-	>();
+	private pressState = new Map<string, { resetTimer?: NodeJS.Timeout; didReset: boolean }>();
 
 	/**
 	 * Updates the key title when the action appears.
 	 */
-	override onWillAppear(
-		ev: WillAppearEvent<CounterSettings>,
-	): void | Promise<void> {
-		return ev.action.setTitle(`${ev.payload.settings.count ?? 0}`);
+	override async onWillAppear(ev: WillAppearEvent<CounterSettings>): Promise<void> {
+		await ev.action.setTitle(`${ev.payload.settings.count ?? 0}`);
 	}
 
 	/**
@@ -50,8 +39,8 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 
 		state.resetTimer = setTimeout(() => {
 			state.didReset = true;
-			void ev.action.setTitle("0");
-			void ev.action.setSettings({ ...ev.payload.settings, count: 0 });
+			ev.action.setTitle("0");
+			ev.action.setSettings({ ...ev.payload.settings, count: 0 });
 		}, 1500);
 
 		this.pressState.set(ev.action.id, state);

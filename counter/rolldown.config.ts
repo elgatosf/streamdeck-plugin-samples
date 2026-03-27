@@ -1,7 +1,7 @@
-import { defineConfig } from "rolldown";
 import { exec } from "node:child_process";
 import path from "node:path";
 import url from "node:url";
+import { defineConfig } from "rolldown";
 
 const isWatching = !!process.env.ROLLUP_WATCH;
 const sdPlugin = "com.elgato.counter";
@@ -18,7 +18,7 @@ const config = defineConfig({
 		minify: !isWatching,
 	},
 	transform: {
-	decorator: {
+		decorator: {
 			legacy: true,
 		},
 	},
@@ -40,7 +40,7 @@ const config = defineConfig({
 					exec(`streamdeck restart ${sdPlugin}`, (error, stdout, stderr) => {
 						if (stdout) console.log(stdout.trim());
 						if (stderr) console.error(stderr.trim());
-						if (error) console.error('Failed to restart Stream Deck:', error.message);
+						if (error) console.error("Failed to restart Stream Deck:", error.message);
 					});
 				}
 			},

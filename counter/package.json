@@ -4,8 +4,10 @@
         "watch": "rolldown -c rolldown.config.ts -w"
     },
     "type": "module",
+    "prettier": "@elgato/prettier-config",
     "devDependencies": {
         "@elgato/cli": "^1.7.1",
+        "@elgato/prettier-config": "^0.3.3",
         "@tsconfig/node20": "^20.1.2",
         "@types/node": "^20.19.0",
         "rolldown": "^1.0.0-rc.6",
