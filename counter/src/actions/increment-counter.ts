@@ -16,7 +16,7 @@ type CounterSettings = {
 @action({ UUID: "com.elgato.counter.action" })
 export class IncrementCounter extends SingletonAction<CounterSettings> {
 	/** Tracks per-action press state to avoid cross-key races. */
-	private pressState = new Map<string, { resetTimer?: NodeJS.Timeout; didReset: boolean }>();
+	private pressState = new Map<string, AbortController>();
 
 	/**
 	 * Updates the key title when the action appears.
@@ -26,47 +26,43 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 	}
 
 	/**
-	 * Starts a long-press timer. If the key is held for 1.5 seconds,
-	 * the counter is reset to `0`.
+	 * Increments the counter on tap, and starts a timer to reset it on long press. If the key is released before the timer completes,
+	 * the timer is cancelled and the counter is not reset.
 	 */
 	override async onKeyDown(ev: KeyDownEvent<CounterSettings>): Promise<void> {
-		const state = this.pressState.get(ev.action.id) ?? { didReset: false };
-		state.didReset = false;
-
-		if (state.resetTimer) {
-			clearTimeout(state.resetTimer);
-		}
-
-		state.resetTimer = setTimeout(() => {
-			state.didReset = true;
-			ev.action.setTitle("0");
-			ev.action.setSettings({ ...ev.payload.settings, count: 0 });
-		}, 1500);
-
-		this.pressState.set(ev.action.id, state);
-	}
-
-	/**
-	 * Increments the counter if the key was released before a reset occurred.
-	 */
-	override async onKeyUp(ev: KeyUpEvent<CounterSettings>): Promise<void> {
-		const state = this.pressState.get(ev.action.id);
-
-		if (state?.resetTimer) {
-			clearTimeout(state.resetTimer);
-		}
-
-		if (state?.didReset) {
-			this.pressState.delete(ev.action.id);
-			return;
-		}
-
 		const settings = { ...ev.payload.settings };
 		settings.incrementBy ??= 1;
 		settings.count = (settings.count ?? 0) + settings.incrementBy;
 
 		await ev.action.setSettings(settings);
 		await ev.action.setTitle(`${settings.count}`);
-		this.pressState.delete(ev.action.id);
+
+		// Start the timeout.
+		const timeoutId = setTimeout(() => {
+			this.pressState.delete(ev.action.id);
+			ev.action.setTitle("0");
+			ev.action.setSettings({ ...ev.payload.settings, count: 0 });
+		}, 1500);
+
+		// Create the abort controller that cancels the timeout and cleans up
+		const controller = new AbortController();
+		controller.signal.addEventListener(
+			"abort",
+			() => {
+				this.pressState.delete(ev.action.id);
+				clearTimeout(timeoutId);
+			},
+			{ once: true },
+		);
+
+		// Set the press state for the action
+		this.pressState.set(ev.action.id, controller);
+	}
+
+	/**
+	 * Aborts the long-press timer. If the timer has already completed, this does nothing.
+	 */
+	override async onKeyUp(ev: KeyUpEvent<CounterSettings>): Promise<void> {
+		this.pressState.get(ev.action.id)?.abort();
 	}
 }
