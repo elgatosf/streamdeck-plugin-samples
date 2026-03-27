@@ -33,7 +33,7 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 		const settings = { ...ev.payload.settings };
 		// default incrementBy to 1 if it's not set
 		settings.incrementBy ??= 1;
-		// increment the count
+		// default the count to 0 and increment
 		settings.count = (settings.count ?? 0) + settings.incrementBy;
 
 		// Update the settings and title to reflect the new count.
