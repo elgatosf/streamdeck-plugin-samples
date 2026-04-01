@@ -26,20 +26,9 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 	}
 
 	/**
-	 * Increments the counter on tap, and starts a timer to reset it on long press. If the key is released before the timer completes,
-	 * the timer is cancelled and the counter is not reset.
+	 * Starts a timer to detect a long press. A short press is handled on key up once the timer is cancelled.
 	 */
 	override async onKeyDown(ev: KeyDownEvent<CounterSettings>): Promise<void> {
-		const settings = { ...ev.payload.settings };
-		// default incrementBy to 1 if it's not set
-		settings.incrementBy ??= 1;
-		// default the count to 0 and increment
-		settings.count = (settings.count ?? 0) + settings.incrementBy;
-
-		// Update the settings and title to reflect the new count.
-		await ev.action.setSettings(settings);
-		await ev.action.setTitle(`${settings.count}`);
-
 		// Start the timeout.
 		const timeoutId = setTimeout(() => {
 			this.pressState.delete(ev.action.id);
@@ -63,9 +52,21 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 	}
 
 	/**
-	 * Aborts the long-press timer. If the timer has already completed, this does nothing.
+	 * Cancels the long-press timer and increments the counter only if the key was released before the long press completed.
 	 */
 	override async onKeyUp(ev: KeyUpEvent<CounterSettings>): Promise<void> {
-		this.pressState.get(ev.action.id)?.abort();
+		const controller = this.pressState.get(ev.action.id);
+		if (!controller) {
+			return;
+		}
+
+		controller.abort();
+
+		const settings = { ...ev.payload.settings };
+		settings.incrementBy ??= 1;
+		settings.count = (settings.count ?? 0) + settings.incrementBy;
+
+		await ev.action.setSettings(settings);
+		await ev.action.setTitle(`${settings.count}`);
 	}
 }
