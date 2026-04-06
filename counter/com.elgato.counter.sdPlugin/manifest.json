@@ -1,6 +1,6 @@
 {
     "Name": "Counter",
-    "Version": "1.5.0.0",
+    "Version": "1.5.0.1",
     "Author": "Elgato",
     "Actions": [
         {
@@ -16,7 +16,8 @@
                     "Image": "imgs/actions/counter/key",
                     "TitleAlignment": "middle"
                 }
-            ]
+            ],
+			"SupportedInMultiActions": false
         }
     ],
     "Category": "Counter",
